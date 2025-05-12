@@ -17,6 +17,7 @@ function App() {
     <AuthProvider>
     <Router>
       <Routes>
+
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/"
@@ -28,6 +29,7 @@ function App() {
         />
         <Route path="/" element={<IssuePage />} />
         <Route path="/profile" element={<ProfilePage />} />
+
       </Routes>
     </Router>
   </AuthProvider>
