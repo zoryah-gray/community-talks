@@ -24,7 +24,7 @@ const IssuePage = () => {
     const [showFeedback, setShowFeedback] = useState(false);
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
+    <div style={{ display: 'flex', height: '100vh', margin: '1rem' }}>
       {/* Left: Issue content */}
       <div style={{ flex: 3, padding: '20px', overflowY: 'auto' }}>
         <h1>Issue Page</h1>

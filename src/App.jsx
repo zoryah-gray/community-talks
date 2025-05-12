@@ -1,15 +1,38 @@
-// App.jsx
+import { useState } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+// import ProfilePage from "./pages/ProfilePage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./contexts/AuthContext";
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import IssuePage from './Pages/issue';
+import ProfilePage from './Pages/profile';
+
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <Routes>
-        <Route path="/Issue" element={<IssuePage />} />
+
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<IssuePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+
       </Routes>
     </Router>
+  </AuthProvider>
   );
 }
 
