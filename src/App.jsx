@@ -27,7 +27,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<IssuePage />} />
+        <Route path="/Issue" element={<IssuePage />} />
         <Route path="/profile" element={<ProfilePage />} />
 
       </Routes>
