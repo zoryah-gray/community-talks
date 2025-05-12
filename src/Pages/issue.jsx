@@ -1,6 +1,9 @@
 // Pages/issue.jsx
-import React from 'react';
+import React, { useState } from "react";
 import UpcomingMeetings from '../components/UpcomingMeetings';
+import { uploadMeetings } from '../components/uploadMeetings';
+import FeedbackForm from "../components/FeedbackForm";
+
 
 const meetings = [
   {
@@ -18,19 +21,34 @@ const meetings = [
 ];
 
 const IssuePage = () => {
+    const [showFeedback, setShowFeedback] = useState(false);
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       {/* Left: Issue content */}
       <div style={{ flex: 3, padding: '20px', overflowY: 'auto' }}>
         <h1>Issue Page</h1>
         <p>This is where your issue content goes.</p>
-        {/* 其他评论、表单等 */}
+
+        {/* ✅ 仅保留反馈按钮 */}
+        <button onClick={() => setShowFeedback(true)}>
+          📝 Submit Feedback
+        </button>
+
+        {/* 🔘 Feedback Modal */}
+        {showFeedback && (
+          <FeedbackForm
+            department="Administration and Public Works"
+            onClose={() => setShowFeedback(false)}
+          />
+        )}
       </div>
 
       {/* Right: Zoom meetings */}
       <div style={{ flex: 2, borderLeft: '1px solid #ddd', overflowY: 'auto' }}>
         <UpcomingMeetings meetings={meetings} />
       </div>
+
     </div>
   );
 };
