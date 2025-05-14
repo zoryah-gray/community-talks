@@ -1,4 +1,4 @@
-/* 整体背景 */
+
 .issue-page {
   display: flex;
   height: 100vh;
@@ -22,7 +22,7 @@
   overflow-y: auto;
 }
 
-/* 返回按钮 */
+
 .back-button {
   background-color: transparent;
   border: none;
@@ -36,7 +36,7 @@
   text-decoration: underline;
 }
 
-/* 标题 */
+
 .page-title {
   font-size: 28px;
   margin: 0 0 8px;
@@ -48,7 +48,7 @@
   margin-bottom: 24px;
 }
 
-/* 通用卡片 */
+
 .section-box {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -69,7 +69,6 @@ h2 {
   font-size: 20px;
 }
 
-/* 列表通用 */
 ul {
   padding-left: 1.2em;
   margin: 0;

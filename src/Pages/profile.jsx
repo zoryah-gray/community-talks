@@ -49,29 +49,39 @@ export default function ProfilePage() {
     return () => unsubscribe();
   }, []);
 
+  const isValidUSZip = (zip) =>
+    /^\d{5}$/.test(zip) && parseInt(zip, 10) >= 501 && parseInt(zip, 10) <= 99950;
+
   const handleZipcodeUpdate = async () => {
+    const zip = newZipcode.trim();
+
+    if (!isValidUSZip(zip)) {
+      alert("❌ Please enter a valid 5-digit US ZIP Code in range.");
+      return;
+    }
+
     const user = auth.currentUser;
     if (user) {
       await set(ref(db, `users/${user.uid}`), {
         email: user.email,
-        zipcode: newZipcode,
+        zipcode: zip,
       });
-      setZipcode(newZipcode);
+      setZipcode(zip);
       setNewZipcode("");
     }
   };
 
   const handleRemoveInterest = (label) => {
     setInterests((prev) => prev.filter((item) => item.label !== label));
-    // Optionally: update Firebase to persist removal
+    // Optional: persist to Firebase
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: "column", height: '100vh', margin: '1rem' }}>
-              
-        <button className="back-button" onClick={() => navigate("/")}>
-          ← Back to Home
-        </button>
+      <button className="back-button" onClick={() => navigate("/")}>
+        ← Back to Home
+      </button>
+
       <div>
         <h2>Profile</h2>
         <h3>Email: {email}</h3>
@@ -92,7 +102,10 @@ export default function ProfilePage() {
             {interests.map((item) => (
               <li key={item.label} style={{ marginBottom: "0.5rem" }}>
                 {item.label}
-                <button onClick={() => navigate(`/department/${encodeURIComponent(item.label)}`)} style={{ marginLeft: "10px" }}>
+                <button
+                  onClick={() => navigate(`/department/${encodeURIComponent(item.label)}`)}
+                  style={{ marginLeft: "10px" }}
+                >
                   Go To Page
                 </button>
                 <button onClick={() => handleRemoveInterest(item.label)} style={{ marginLeft: "5px" }}>
@@ -102,6 +115,7 @@ export default function ProfilePage() {
             ))}
           </ul>
         </div>
+
         <div style={{ margin: "1rem" }}>
           <h3>Engagement Preferences:</h3>
           <ul>
