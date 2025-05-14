@@ -2,7 +2,7 @@
 import { db } from "../firebase";
 import { ref, set } from "firebase/database";
 
-// 模拟的分类 + 委员会名称（真实链接稍后可补充）
+// This is a mock dataset for community groups and committees
 const communityData = [
   {
     category: "Standing Committees of the Council",
@@ -97,6 +97,33 @@ const communityData = [
   },
 ];
 
+// export async function uploadCommunityDataset() {
+//   const dataRef = ref(db, "Community");
+//   const dataset = {};
+
+//   let idCounter = 1;
+
+//   for (const group of communityData) {
+//     for (const name of group.entries) {
+//       const id = `comm-${idCounter.toString().padStart(4, "0")}`;
+//       dataset[id] = {
+//         id,
+//         name,
+//         category: group.category,
+//         link: "", // 
+//       };
+//       idCounter++;
+//     }
+//   }
+
+//   try {
+//     await set(dataRef, dataset);
+//     console.log("✅ Community data uploaded.");
+//   } catch (error) {
+//     console.error("❌ Upload failed:", error);
+//   }
+// }
+
 export async function uploadCommunityDataset() {
   const dataRef = ref(db, "Community");
   const dataset = {};
@@ -104,13 +131,15 @@ export async function uploadCommunityDataset() {
   let idCounter = 1;
 
   for (const group of communityData) {
+    const categoryKey = group.category;
+    if (!dataset[categoryKey]) dataset[categoryKey] = {};
+
     for (const name of group.entries) {
       const id = `comm-${idCounter.toString().padStart(4, "0")}`;
-      dataset[id] = {
+      dataset[categoryKey][id] = {
         id,
         name,
-        category: group.category,
-        link: "", // 🔗 可之后爬虫补充真实链接
+        link: ""
       };
       idCounter++;
     }
@@ -118,7 +147,7 @@ export async function uploadCommunityDataset() {
 
   try {
     await set(dataRef, dataset);
-    console.log("✅ Community data uploaded.");
+    console.log("✅ Nested community data uploaded.");
   } catch (error) {
     console.error("❌ Upload failed:", error);
   }

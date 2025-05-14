@@ -29,7 +29,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/department/:deptId" element={<IssuePage />} />
+        {/* <Route path="/department/:deptId" element={<IssuePage />} /> */}
+        <Route path="/department/:category/:slug" element={<IssuePage />} />
+
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/function" element={<FunctionPage />} />
       </Routes>
