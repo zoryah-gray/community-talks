@@ -5,7 +5,6 @@ import "../css/HomePage.css";
 export default function HomePage() {
   const navigate = useNavigate();
 
-  // Define your issue areas and corresponding entities
   const issueAreas = [
     {
       title: "Housing",
@@ -39,9 +38,9 @@ export default function HomePage() {
     }
   ];
 
-  // Handler to navigate to the detail page for a specific entity
+
   const handleEntityClick = (entity) => {
-    navigate(`/entity/${encodeURIComponent(entity)}`);
+    navigate(`/department/${encodeURIComponent(entity)}`);
   };
 
   return (

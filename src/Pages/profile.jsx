@@ -20,18 +20,18 @@ const meetings = [
 ];
 
 const initialInterests = [
-  { label: "City Council's Administration and Public Works Committee", path: "administration" },
-  { label: "City Housing Committee", path: "housing" },
-  { label: "Police Review Committee", path: "police-review" },
-  { label: "Environment Board", path: "environment" },
-  { label: "Zoning Committee", path: "zoning" },
+  { label: "City Council's Administration and Public Works Committee" },
+  { label: "City Housing Committee" },
+  { label: "Police Review Committee" },
+  { label: "Environment Board" },
+  { label: "Zoning Committee" },
 ];
 
 export default function ProfilePage() {
   const [email, setEmail] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [newZipcode, setNewZipcode] = useState("");
-  const [interests, setInterests] = useState(initialInterests); // ✅ 本地兴趣点状态
+  const [interests, setInterests] = useState(initialInterests);
 
   const navigate = useNavigate();
 
@@ -61,14 +61,17 @@ export default function ProfilePage() {
     }
   };
 
-  const handleRemoveInterest = (path) => {
-    // ✅ 从当前兴趣列表中移除该 path
-    setInterests((prev) => prev.filter((item) => item.path !== path));
-    // ✅ 可选：这里可以同步更新到数据库
+  const handleRemoveInterest = (label) => {
+    setInterests((prev) => prev.filter((item) => item.label !== label));
+    // Optionally: update Firebase to persist removal
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: "column", height: '100vh', margin: '1rem' }}>
+              
+        <button className="back-button" onClick={() => navigate("/")}>
+          ← Back to Home
+        </button>
       <div>
         <h2>Profile</h2>
         <h3>Email: {email}</h3>
@@ -85,12 +88,16 @@ export default function ProfilePage() {
       <div style={{ display: 'flex', alignItems: "flex-start", justifyContent: "left" }}>
         <div style={{ margin: "1rem" }}>
           <h3>Interest Areas</h3>
-          <ul style={{ textDecoration: "none", listStyle: "none" }}>
+          <ul style={{ textDecoration: "none", listStyle: "none", paddingLeft: 0 }}>
             {interests.map((item) => (
-              <li key={item.path}>
+              <li key={item.label} style={{ marginBottom: "0.5rem" }}>
                 {item.label}
-                <button onClick={() => navigate(`/department/${item.path}`)}>Go To Page</button>
-                <button onClick={() => handleRemoveInterest(item.path)}>Remove</button>
+                <button onClick={() => navigate(`/department/${encodeURIComponent(item.label)}`)} style={{ marginLeft: "10px" }}>
+                  Go To Page
+                </button>
+                <button onClick={() => handleRemoveInterest(item.label)} style={{ marginLeft: "5px" }}>
+                  Remove
+                </button>
               </li>
             ))}
           </ul>
