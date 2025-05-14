@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import UpcomingMeetings from '../components/UpcomingMeetings';
 import { auth, db } from "../firebase";
 import { ref, set, get, child } from "firebase/database";
+import "../css/Issue.css";
 
 const meetings = [
   {
@@ -83,9 +84,9 @@ export default function ProfilePage() {
       </button>
 
       <div>
-        <h2>Profile</h2>
-        <h3>Email: {email}</h3>
-        <h3>Zipcode: {zipcode}</h3>
+        <h2 className='page-title'>Profile</h2>
+        <p className="page-subtitle"><strong>Email:</strong> {email}</p>
+        <p className="page-subtitle"><strong>Zipcode:</strong> {zipcode}</p>
         <input
           type="text"
           placeholder="Enter new zipcode"
@@ -96,7 +97,7 @@ export default function ProfilePage() {
       </div>
 
       <div style={{ display: 'flex', alignItems: "flex-start", justifyContent: "left" }}>
-        <div style={{ margin: "1rem" }}>
+        <div className="section-box" style={{ margin: "1rem" }}>
           <h3>Interest Areas</h3>
           <ul style={{ textDecoration: "none", listStyle: "none", paddingLeft: 0 }}>
             {interests.map((item) => (
@@ -116,7 +117,7 @@ export default function ProfilePage() {
           </ul>
         </div>
 
-        <div style={{ margin: "1rem" }}>
+        <div className="section-box" style={{ margin: "1rem" }}>
           <h3>Engagement Preferences:</h3>
           <ul>
             <li>Written submissions</li>

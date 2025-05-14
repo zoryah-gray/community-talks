@@ -36,6 +36,11 @@
   text-decoration: underline;
 }
 
+button{
+  border-radius: 20px;
+  border: none;
+}
+
 
 .page-title {
   font-size: 28px;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UpcomingMeetings from "../components/UpcomingMeetings";
 import FeedbackForm from "../components/FeedbackForm";
-import "./Issue.css";
+import "../css/Issue.css";
 
 const meetings = [
   {
@@ -39,6 +39,10 @@ const members = [
   { name: "Ald. Bobby Burns", role: "Member" },
 ];
 
+const DEPT_INFO = [
+  "Matters relating to the bills and purchases; budget policy; finance; fire; legal; licensing; personnel; public works, including: streets and alleys, lighting, refuse disposal, water and sewers, traffic control, and parking; public buildings, public transportation; public utilities; safety (including civil defense); liaison with the police and fire pension boards; and capital improvements. # OF MEMBERS: Five (5) Councilmembers are appointed."
+];
+
 export default function IssuePage() {
   const [showFeedback, setShowFeedback] = useState(false);
   const { deptId } = useParams();
@@ -55,7 +59,10 @@ export default function IssuePage() {
         </button>
 
         <h1 className="page-title">{readableDeptName}</h1>
-        <p className="page-subtitle">This is where your issue content goes.</p>
+        <p className="page-subtitle"> <strong>DUTIES & RESPONSIBILITIES:</strong></p>
+        <div className="page-subtitle">
+          {DEPT_INFO}
+        </div>
 
         {isSpecial && (
           <div className="section-box">
