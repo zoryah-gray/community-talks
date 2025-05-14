@@ -115,7 +115,7 @@ export default function IssuePage() {
         )}
       </div>
 
-      {/* 右侧 */}
+     
       <div className="issue-right">
         <div className="section-box">
           <h2>📅 Upcoming Zoom Meetings</h2>
