@@ -92,7 +92,9 @@ export default function LoginPage() {
                           <label className="form-check-label" htmlFor="form1Example3"> Remember password </label>
                         </div>
 
-                        <button data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                        <button data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-lg btn-block" onClick={handleLogin}>
+                          Login
+                        </button>
                       </form>
 
                       <hr className="my-2"/>
