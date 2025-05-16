@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import "../css/HomePage.css";
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const issueAreas = [
     {
@@ -38,9 +40,17 @@ export default function HomePage() {
     }
   ];
 
-
   const handleEntityClick = (entity) => {
     navigate(`/department/${encodeURIComponent(entity)}`);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err.message);
+    }
   };
 
   return (
@@ -48,12 +58,21 @@ export default function HomePage() {
       <header className="homepage-header">
         <h1>Welcome to Community Talks</h1>
         <p>Your hub for engaging discussions</p>
-        <button
-          className="homepage-button"
-          onClick={() => navigate("/profile")}
-        >
-          Go to Profile
-        </button>
+
+        <div className="homepage-button-group">
+          <button
+            className="homepage-button"
+            onClick={() => navigate("/profile")}
+          >
+            Go to Profile
+          </button>
+          <button
+            className="homepage-button logout"
+            onClick={handleLogout}
+          >
+            Sign Out
+          </button>
+        </div>
       </header>
 
       <main className="homepage-grid">

@@ -4,11 +4,12 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function ProtectedRoute({ children }) {
   const { currentUser, loading } = useAuth();
-  if (loading) return <div>Loading...</div>
-  
-  // If not logged in, redirect to login
+
+  if (loading) return <div>Loading...</div>;
+
+  // Not logged in → redirect to login
   if (!currentUser) return <Navigate to="/login" />;
-  if (currentUser) return <Navigate to="/" />;  
-  
+
+  // Logged in → allow access
   return children;
 }
