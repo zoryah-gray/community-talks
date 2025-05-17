@@ -122,7 +122,7 @@
 //         )}
 //       </div>
 
-     
+
 //       <div className="issue-right">
 //         <div className="section-box">
 //           <h2>📅 Upcoming Zoom Meetings</h2>
@@ -132,6 +132,9 @@
 //     </div>
 //   );
 // }
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
@@ -139,6 +142,17 @@ import { ref, get } from "firebase/database";
 import UpcomingMeetings from "../components/UpcomingMeetings";
 import FeedbackForm from "../components/FeedbackForm";
 import "../css/Issue.css";
+
+
+const isValidUrl = (str) => {
+  try {
+    const url = new URL(str);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+};
+
 
 export default function IssuePage() {
   const [showFeedback, setShowFeedback] = useState(false);
@@ -173,6 +187,11 @@ export default function IssuePage() {
     },
   ];
 
+  const formatKey = (key) =>
+    key
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+
   return (
     <div className="issue-page">
       <div className="issue-left">
@@ -191,7 +210,7 @@ export default function IssuePage() {
           </div>
         )}
 
-        {detailData?.members && (
+        {/* {detailData?.members && (
           <div className="section-box">
             <h2>👫 Members</h2>
             <ul>
@@ -203,7 +222,27 @@ export default function IssuePage() {
               ))}
             </ul>
           </div>
+        )} */}
+        {detailData?.members && (
+          <div className="section-box">
+            <h2>👫 Members</h2>
+            <ul>
+              {detailData.members.map((m, i) => (
+                <li key={i}>
+                  {m.profileLink ? (
+                    <a href={m.profileLink} target="_blank" rel="noopener noreferrer">
+                      <strong>{m.name}</strong>
+                    </a>
+                  ) : (
+                    <strong>{m.name}</strong>
+                  )}
+                  {m.role ? ` – ${m.role}` : ""} {m.term ? ` (${m.term})` : ""}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
+
 
         {detailData?.meetings && (
           <div className="section-box">
@@ -213,12 +252,14 @@ export default function IssuePage() {
                 let videoId = "";
                 try {
                   const urlObj = new URL(rec.link);
-                  videoId = new URLSearchParams(urlObj.search).get("v") || urlObj.pathname.split("/").pop();
-                } catch (_) {}
+                  videoId =
+                    new URLSearchParams(urlObj.search).get("v") ||
+                    urlObj.pathname.split("/").pop();
+                } catch (_) { }
 
                 return (
                   <div key={i} className="recording-item">
-                    <p>{rec.date}</p>
+                    <p>{rec.date || rec.title}</p>
                     <div className="video-wrapper">
                       <iframe
                         src={`https://www.youtube.com/embed/${videoId}`}
@@ -234,6 +275,46 @@ export default function IssuePage() {
             </div>
           </div>
         )}
+
+        {detailData &&
+          Object.entries(detailData).map(([key, value]) => {
+            if (["description", "members", "meetings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
+
+
+            if (Array.isArray(value)) {
+              return (
+                <div key={key} className="section-box">
+                  <h2>{formatKey(key)}</h2>
+                  <ul>
+                    {value.map((v, i) => (
+                      <li key={i}>{typeof v === "string" ? v : JSON.stringify(v)}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            }
+
+            return (
+              <div key={key} className="section-box">
+                <h2>{formatKey(key)}</h2>
+                {/* <p>{typeof value === "string" ? value : JSON.stringify(value)}</p>
+                 */}
+                {typeof value === "string" ? (
+                  isValidUrl(value) ? (
+                    <a href={value} target="_blank" rel="noopener noreferrer">
+                      {value}
+                    </a>
+                  ) : (
+                    <p>{value}</p>
+                  )
+                ) : (
+                  <p>{JSON.stringify(value)}</p>
+                )}
+
+
+              </div>
+            );
+          })}
 
         <div className="section-box">
           <h2>💬 Feedback</h2>
@@ -255,10 +336,20 @@ export default function IssuePage() {
 
       <div className="issue-right">
         <div className="section-box">
-          <h2>📅 Upcoming Zoom Meetings</h2>
+
           <UpcomingMeetings meetings={meetings} />
+
+
+          {detailData?.meetingSchedule && (
+            <p><strong>Schedule:</strong> {detailData.meetingSchedule}</p>
+          )}
+          {detailData?.meetingPlace && (
+            <p><strong>Location:</strong> {detailData.meetingPlace}</p>
+          )}
+
         </div>
       </div>
+
     </div>
   );
 }
