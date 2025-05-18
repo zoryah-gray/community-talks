@@ -1,25 +1,49 @@
 import React, { useState } from "react";
-import { submitFeedback } from "./submitFeedback";
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, set, push } from "firebase/database";
 
 const FeedbackForm = ({ department, onClose }) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false); 
-  // for error message
+  const [showError, setShowError] = useState(false);
+  const [askIdentity, setAskIdentity] = useState(false);
 
-  const handleSubmit = async () => {
+  const auth = getAuth();
+  const db = getDatabase();
+
+  const handleSubmit = () => {
     if (!text.trim()) {
       setShowError(true);
-      setTimeout(() => setShowError(false), 1500); // show error for 1.5 seconds
+      setTimeout(() => setShowError(false), 1500);
       return;
     }
 
+    setAskIdentity(true);
+  };
+
+  const submitToDatabase = async (isIdentified) => {
     setLoading(true);
-    await submitFeedback(department, text);
+    const user = auth.currentUser;
+    const payload = isIdentified && user
+      ? {
+          userId: user.uid,
+          email: user.email,
+          message: text,
+          timestamp: Date.now(),
+        }
+      : {
+          message: text,
+          anonymous: true,
+          timestamp: Date.now(),
+        };
+
+    const path = `feedback/${department}`;
+    await set(push(ref(db, path)), payload);
+
     setLoading(false);
     setText("");
-
+    setAskIdentity(false);
     setShowSuccess(true);
     setTimeout(() => {
       setShowSuccess(false);
@@ -49,9 +73,20 @@ const FeedbackForm = ({ department, onClose }) => {
               </button>
               <button onClick={onClose}>Cancel</button>
             </div>
-            {/* warning */}
             {showError && (
               <div style={styles.errorBox}>⚠️ Feedback cannot be empty.</div>
+            )}
+            {askIdentity && (
+              <div style={styles.confirmBox}>
+                <p>
+                  Do you want to submit this feedback with your name and email?
+                  If you choose "Yes", your user ID and email will be recorded.
+                </p>
+                <div style={styles.buttons}>
+                  <button onClick={() => submitToDatabase(true)}>Yes</button>
+                  <button onClick={() => submitToDatabase(false)}>No</button>
+                </div>
+              </div>
             )}
           </>
         )}
@@ -89,6 +124,7 @@ const styles = {
     display: "flex",
     justifyContent: "flex-end",
     gap: "10px",
+    marginTop: "10px",
   },
   errorBox: {
     marginTop: "10px",
@@ -98,5 +134,13 @@ const styles = {
     borderRadius: "4px",
     fontSize: "14px",
     textAlign: "center",
+  },
+  confirmBox: {
+    marginTop: "16px",
+    backgroundColor: "#f0f4ff",
+    padding: "10px",
+    borderRadius: "6px",
+    fontSize: "14px",
+    color: "#333",
   },
 };
