@@ -42,31 +42,37 @@ const details = {
     ],
     "meetings": [
       {
-        "title": "Administration & Public Works Committee - 05/12/2025",
-        "date": "2025-05-12",
-        "location": "Lorraine H. Morton City Hall - Council Chambers, 909 Davis Street, Evanston, Illinois 60201"
+        title: "Administration & Public Works Committee",
+        date: "2025-05-12",
+        time: "5:15 PM - 6:00 PM",
+        location: "Lorraine H. Morton City Hall - Council Chambers, 909 Davis Street, Evanston, Illinois 60201"
       },
       {
-        "title": "MWDEBE Development Committee - 05/21/2025",
-        "date": "2025-05-21",
-        "location": "City Hall, 909 Davis, Evanston, Illinois 60201"
+        title: "MWDEBE Development Committee",
+        date: "2025-05-21",
+        time: "6:00 PM - 7:30 PM",
+        location: "City Hall, 909 Davis, Evanston, Illinois 60201"
       },
       {
-        "title": "ADA Advisory Committee - 05/22/2025",
-        "date": "2025-05-22",
-        "location": "Evanston Public Library, 1703 Orrington Avenue, Evanston, Illinois 60201"
+        title: "ADA Advisory Committee",
+        date: "2025-05-22",
+        time: "3:00 PM",
+        location: "Evanston Public Library, 1703 Orrington Avenue, Evanston, Illinois 60201"
       },
       {
-        "title": "Memorial Day Ceremony - 05/26/2025",
-        "date": "2025-05-26",
-        "location": "Fountain Square, Davis Street at Sherman and Orrington Avenues, Evanston, Illinois 60201"
+        title: "Memorial Day Ceremony",
+        date: "2025-05-26",
+        time: "10:30 AM",
+        location: "Fountain Square, Davis Street at Sherman and Orrington Avenues, Evanston, Illinois 60201"
       },
       {
-        "title": "Referrals Committee - 05/27/2025",
-        "date": "2025-05-27",
-        "location": "Lorraine H. Morton City Hall - Council Chambers, 909 Davis Street, Evanston, Illinois 60201"
+        title: "Referrals Committee",
+        date: "2025-05-27",
+        time: "4:45 PM - 5:00 PM",
+        location: "Lorraine H. Morton City Hall - Council Chambers, 909 Davis Street, Evanston, Illinois 60201"
       }
-    ],
+    ]
+    ,
     "recordings": [
       {
         "date": "2025-05-12",
