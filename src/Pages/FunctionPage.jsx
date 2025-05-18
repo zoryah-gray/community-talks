@@ -3,7 +3,7 @@ import React from "react";
 import { uploadCommunityDataset } from "../utils/uploadCommunityData";
 import { uploadSpecialCommitteeDetails } from "../utils/uploadSpecialCommitteeDetails";
 import { addSlugsToCommunity } from "../utils/addSlugsToCommunity";
-
+import { uploadStandingCommitteeDetails } from "../utils/uploadStandingCommittees";
 
 
 export default function FunctionPage() {
@@ -17,9 +17,15 @@ export default function FunctionPage() {
 
         Upload Special Committee Details
       </button>
+
       <button onClick={addSlugsToCommunity}>
         Add Slugs to Community
       </button>
+
+      <button onClick={uploadStandingCommitteeDetails}>
+        Upload Standing Committee Details
+      </button>
+      
     </div>
   );
 }

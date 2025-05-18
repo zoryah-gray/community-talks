@@ -22,6 +22,48 @@
   overflow-y: auto;
 }
 
+.meeting-list {
+  list-style: none;
+  padding: 0;
+}
+
+.meeting-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fafafa;
+}
+
+.meeting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meeting-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.meeting-buttons a {
+  margin-left: 0.5em;
+  text-decoration: none;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 5px;
+}
+
+.btn.btn-map {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn.btn-calendar {
+  background-color: #28a745;
+  color: white;
+}
+
 
 .back-button {
   background-color: transparent;

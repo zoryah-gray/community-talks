@@ -8,7 +8,9 @@ const details = {
     category: "Special Committees of the Council",
     description:
       "The Alternative Emergency Response Subcommittee is responsible for developing a non police response to members of the community who are in need of immediate support (not including life saving medical situations)...",
-    meetings: [
+    meetingPlace: "",
+    meetingSchedule: "",
+    recordings: [
       {
         date: "September 13, 2022",
         link: "https://youtu.be/BnBEfjDlrYg",
@@ -55,6 +57,7 @@ const details = {
       "Dr. Angel Turner, District 65 Interim Superintendent",
       "Dr. Marcus Campbell, District 202 Superintendent",
     ],
+    meetings: [],
     lastUpdated: new Date().toISOString(),
   },
 
@@ -91,7 +94,7 @@ const details = {
       },
     ],
     staff: ["Luke Stowe, City Manager, City Manager's Office"],
-    meetings: [
+    recordings: [
       {
         date: "August 31, 2023",
         link: "https://youtu.be/zpigVWhOZqU",
@@ -105,7 +108,7 @@ const details = {
   },
 };
 
-// function to upload special committee details to Firebase
+// 🟢 Upload function
 export const uploadSpecialCommitteeDetails = async () => {
   for (const [slug, data] of Object.entries(details)) {
     const path = `detail/Special Committees of the Council/${slug}`;

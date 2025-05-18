@@ -1,3 +1,138 @@
+// import React, { useState } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import UpcomingMeetings from "../components/UpcomingMeetings";
+// import FeedbackForm from "../components/FeedbackForm";
+// import "../css/Issue.css";
+
+// const meetings = [
+//   {
+//     id: "1234567890",
+//     title: "Weekly Team Sync",
+//     startTime: "2025-05-13T20:00:00",
+//     password: "123456",
+//   },
+//   {
+//     id: "9876543210",
+//     title: "Project Planning",
+//     startTime: "2025-05-13T15:00:00",
+//     password: "654321",
+//   },
+// ];
+
+// const SPECIAL_DEPT =
+//   "City Council's Administration and Public Works Committee";
+
+// const recordings = [
+//   {
+//     title: "May 12, 2025 - Meeting Recording",
+//     url: "https://youtu.be/watch?v=RArWkNTRJl0",
+//   },
+//   {
+//     title: "April 26, 2025 - Meeting Recording",
+//     url: "https://youtu.be/watch?v=IQtLFnZeaDE",
+//   },
+// ];
+
+// const members = [
+//   { name: "Ald. Devon Reid", role: "Chair" },
+//   { name: "Ald. Clare Kelly", role: "Vice Chair" },
+//   { name: "Ald. Bobby Burns", role: "Member" },
+// ];
+
+// const DEPT_INFO = [
+//   "Matters relating to the bills and purchases; budget policy; finance; fire; legal; licensing; personnel; public works, including: streets and alleys, lighting, refuse disposal, water and sewers, traffic control, and parking; public buildings, public transportation; public utilities; safety (including civil defense); liaison with the police and fire pension boards; and capital improvements. # OF MEMBERS: Five (5) Councilmembers are appointed."
+// ];
+
+// export default function IssuePage() {
+//   const [showFeedback, setShowFeedback] = useState(false);
+//   const { deptId } = useParams();
+//   const navigate = useNavigate();
+//   const readableDeptName = decodeURIComponent(deptId);
+//   const isSpecial = readableDeptName === SPECIAL_DEPT;
+
+//   return (
+//     <div className="issue-page">
+//       {/* 左侧 */}
+//       <div className="issue-left">
+//         <button className="back-button" onClick={() => navigate("/")}>
+//           ← Back to Home
+//         </button>
+
+//         <h1 className="page-title">{readableDeptName}</h1>
+//         <p className="page-subtitle"> <strong>DUTIES & RESPONSIBILITIES:</strong></p>
+//         <div className="page-subtitle">
+//           {DEPT_INFO}
+//         </div>
+
+//         {isSpecial && (
+//           <div className="section-box">
+//             <h2>👫 Members</h2>
+//             <ul>
+//               {members.map((m) => (
+//                 <li key={m.name}>
+//                   <strong>{m.name}</strong> – {m.role}
+//                 </li>
+//               ))}
+//             </ul>
+//           </div>
+//         )}
+
+//         {isSpecial && (
+//           <div className="section-box">
+//             <h2>📽️ Recordings</h2>
+//             <div className="recording-list">
+//               {recordings.map((rec) => {
+//                 const videoId = new URLSearchParams(
+//                   new URL(rec.url).search
+//                 ).get("v");
+//                 return (
+//                   <div key={rec.title} className="recording-item">
+//                     <p>{rec.title}</p>
+//                     <div className="video-wrapper">
+//                       <iframe
+//                         src={`https://www.youtube.com/embed/${videoId}`}
+//                         title={rec.title}
+//                         frameBorder="0"
+//                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+//                         allowFullScreen
+//                       />
+//                     </div>
+//                   </div>
+//                 );
+//               })}
+//             </div>
+//           </div>
+//         )}
+
+//         <div className="section-box">
+//           <h2>💬 Feedback</h2>
+//           <button
+//             onClick={() => setShowFeedback(true)}
+//             className="submit-btn"
+//           >
+//             Submit Feedback
+//           </button>
+//         </div>
+
+//         {showFeedback && (
+//           <FeedbackForm
+//             department={readableDeptName}
+//             onClose={() => setShowFeedback(false)}
+//           />
+//         )}
+//       </div>
+
+
+//       <div className="issue-right">
+//         <div className="section-box">
+//           <h2>📅 Upcoming Zoom Meetings</h2>
+//           <UpcomingMeetings meetings={meetings} />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 
 
 import React, { useState, useEffect } from "react";
@@ -7,7 +142,6 @@ import { ref, get } from "firebase/database";
 import UpcomingMeetings from "../components/UpcomingMeetings";
 import FeedbackForm from "../components/FeedbackForm";
 import "../css/Issue.css";
-import { parse, format, isValid, addHours } from "date-fns";
 
 
 const isValidUrl = (str) => {
@@ -69,17 +203,10 @@ export default function IssuePage() {
 
         {detailData?.description && (
           <div className="section-box">
-            <p className="page-subtitle" style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              Duties & Responsibilities:
+            <p className="page-subtitle">
+              <strong>DUTIES & RESPONSIBILITIES:</strong>
             </p>
-            <div>
-              {detailData.description
-                .split(/(?<=\.)\s+/)
-                .filter(Boolean)
-                .map((para, idx) => (
-                  <p key={idx} style={{ marginBottom: "0.6em" }}>{para.trim()}</p>
-                ))}
-            </div>
+            <div>{detailData.description}</div>
           </div>
         )}
 
@@ -151,7 +278,7 @@ export default function IssuePage() {
 
         {detailData &&
           Object.entries(detailData).map(([key, value]) => {
-            if (["description",'lastUpdated', "members", 'meetings', "recordings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
+            if (["description", "members", "recordings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
 
 
             if (Array.isArray(value)) {
@@ -205,19 +332,13 @@ export default function IssuePage() {
             onClose={() => setShowFeedback(false)}
           />
         )}
-              {detailData?.lastUpdated && (
-        <div style={{ fontSize: "0.9em", color: "#666", marginTop: "1em", paddingLeft: "0.5em" }}>
-          Last updated: {new Date(detailData.lastUpdated).toLocaleString()}
-        </div>
-      )}
       </div>
-
-
 
       <div className="issue-right">
         <div className="section-box">
-          <h2>📅 Upcoming Meetings</h2>
-          {/* <UpcomingMeetings meetings={meetings} /> */}
+
+          <UpcomingMeetings meetings={meetings} />
+
 
           {detailData?.meetingSchedule && (
             <p><strong>Schedule:</strong> {detailData.meetingSchedule}</p>
@@ -225,70 +346,9 @@ export default function IssuePage() {
           {detailData?.meetingPlace && (
             <p><strong>Location:</strong> {detailData.meetingPlace}</p>
           )}
+
         </div>
-
-        {detailData?.meetings && detailData.meetings.length > 0 && (
-          <div className="section-box">
-            <h2>📌 Scheduled In-Person Meetings</h2>
-            <ul className="meeting-list">
-              {detailData.meetings.map((meeting, i) => {
-                const [rawStart, rawEnd] = (meeting.time || "").split(" - ");
-                const dateStr = meeting.date;
-                const location = meeting.location || "";
-                const title = meeting.title || "Meeting";
-
-                let startDateTime = null;
-                let endDateTime = null;
-                let calendarUrl = "#";
-                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
-
-                // ✅ 解析开始时间
-                if (dateStr && rawStart) {
-                  startDateTime = parse(`${dateStr} ${rawStart}`, "yyyy-MM-dd h:mm a", new Date());
-
-                  if (isValid(startDateTime)) {
-                    // ✅ 如果提供了结束时间，解析它；否则默认一小时后
-                    if (rawEnd) {
-                      endDateTime = parse(`${dateStr} ${rawEnd}`, "yyyy-MM-dd h:mm a", new Date());
-                      if (!isValid(endDateTime)) {
-                        endDateTime = addHours(startDateTime, 1);
-                      }
-                    } else {
-                      endDateTime = addHours(startDateTime, 1);
-                    }
-
-                    // ✅ 构造 Google Calendar 链接
-                    calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${format(startDateTime, "yyyyMMdd'T'HHmmss")}/${format(endDateTime, "yyyyMMdd'T'HHmmss")}&location=${encodeURIComponent(location)}`;
-                  }
-                }
-
-                return (
-                  <li key={i} className="meeting-item" style={{ marginBottom: "1em" }}>
-                    <div className="meeting-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <strong>{title}</strong>
-                      <div style={{ display: "flex", gap: "0.5em" }}>
-                        <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="btn btn-map">
-                          📍 Show on Map
-                        </a>
-                        <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="btn btn-calendar">
-                          📅 Add to Calendar
-                        </a>
-                      </div>
-                    </div>
-                    <p style={{ margin: "0.3em 0 0 0.5em" }}>
-                      <span>📆 {meeting.date}</span><br />
-                      <span>🕒 {meeting.time || "Time not specified"}</span><br />
-                      <span>📌 {location}</span>
-                    </p>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
-
       </div>
-
 
     </div>
   );

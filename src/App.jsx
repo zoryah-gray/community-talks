@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
 import React from 'react';
 import IssuePage from './Pages/issue';
-import ProfilePage from './Pages/profile';
+import ProfilePage from './Pages/Profile';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import FunctionPage from './Pages/FunctionPage';

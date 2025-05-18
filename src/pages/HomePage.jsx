@@ -81,7 +81,7 @@
 
 
 
-// ✅ HomePage.jsx - 从 Firebase 加载分类实体并跳转到 `/department/:category/:slug`
+// 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
@@ -147,7 +147,7 @@ export default function HomePage() {
   
         const structured = [];
   
-        // ✅ 优先加入 priority 中的分类
+        // 
         for (const key of priority) {
           if (data[key]) {
             structured.push({
@@ -160,7 +160,7 @@ export default function HomePage() {
           }
         }
   
-        // ✅ 加入其余分类
+        // 
         for (const [category, items] of Object.entries(data)) {
           if (!priority.includes(category)) {
             structured.push({
