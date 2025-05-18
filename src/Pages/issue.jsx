@@ -7,6 +7,7 @@ import { ref, get } from "firebase/database";
 import UpcomingMeetings from "../components/UpcomingMeetings";
 import FeedbackForm from "../components/FeedbackForm";
 import "../css/Issue.css";
+import { parse, format, isValid, addHours } from "date-fns";
 
 
 const isValidUrl = (str) => {
@@ -68,10 +69,17 @@ export default function IssuePage() {
 
         {detailData?.description && (
           <div className="section-box">
-            <p className="page-subtitle">
-              <strong>DUTIES & RESPONSIBILITIES:</strong>
+            <p className="page-subtitle" style={{ textTransform: "uppercase", fontWeight: "bold" }}>
+              Duties & Responsibilities:
             </p>
-            <div>{detailData.description}</div>
+            <div>
+              {detailData.description
+                .split(/(?<=\.)\s+/)
+                .filter(Boolean)
+                .map((para, idx) => (
+                  <p key={idx} style={{ marginBottom: "0.6em" }}>{para.trim()}</p>
+                ))}
+            </div>
           </div>
         )}
 
@@ -143,7 +151,7 @@ export default function IssuePage() {
 
         {detailData &&
           Object.entries(detailData).map(([key, value]) => {
-            if (["description", "members", 'meetings', "recordings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
+            if (["description",'lastUpdated', "members", 'meetings', "recordings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
 
 
             if (Array.isArray(value)) {
@@ -197,7 +205,14 @@ export default function IssuePage() {
             onClose={() => setShowFeedback(false)}
           />
         )}
+              {detailData?.lastUpdated && (
+        <div style={{ fontSize: "0.9em", color: "#666", marginTop: "1em", paddingLeft: "0.5em" }}>
+          Last updated: {new Date(detailData.lastUpdated).toLocaleString()}
+        </div>
+      )}
       </div>
+
+
 
       <div className="issue-right">
         <div className="section-box">
@@ -215,40 +230,56 @@ export default function IssuePage() {
         {detailData?.meetings && detailData.meetings.length > 0 && (
           <div className="section-box">
             <h2>📌 Scheduled In-Person Meetings</h2>
-            <ul>
+            <ul className="meeting-list">
               {detailData.meetings.map((meeting, i) => {
-                const title = encodeURIComponent(meeting.title || "Meeting");
-                const location = encodeURIComponent(meeting.location || "");
-                const dateStr = meeting.date || "";
-                const timeStr = meeting.time || "";
+                const [rawStart, rawEnd] = (meeting.time || "").split(" - ");
+                const dateStr = meeting.date;
+                const location = meeting.location || "";
+                const title = meeting.title || "Meeting";
 
-                // Format start/end datetime for Google Calendar link
-                const startDateTime = new Date(`${dateStr} ${timeStr.split("-")[0]?.trim()}`);
-                const endDateTime = timeStr.includes("-")
-                  ? new Date(`${dateStr} ${timeStr.split("-")[1]?.trim()}`)
-                  : new Date(new Date(startDateTime).getTime() + 60 * 60 * 1000); // default 1hr
+                let startDateTime = null;
+                let endDateTime = null;
+                let calendarUrl = "#";
+                const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
 
-                const formatForGoogle = (dt) =>
-                  dt.toISOString().replace(/[-:]|\.\d{3}/g, "").slice(0, 15);
+                // ✅ 解析开始时间
+                if (dateStr && rawStart) {
+                  startDateTime = parse(`${dateStr} ${rawStart}`, "yyyy-MM-dd h:mm a", new Date());
 
-                const calendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatForGoogle(
-                  startDateTime
-                )}/${formatForGoogle(endDateTime)}&location=${location}`;
+                  if (isValid(startDateTime)) {
+                    // ✅ 如果提供了结束时间，解析它；否则默认一小时后
+                    if (rawEnd) {
+                      endDateTime = parse(`${dateStr} ${rawEnd}`, "yyyy-MM-dd h:mm a", new Date());
+                      if (!isValid(endDateTime)) {
+                        endDateTime = addHours(startDateTime, 1);
+                      }
+                    } else {
+                      endDateTime = addHours(startDateTime, 1);
+                    }
 
-                const mapsLink = `https://www.google.com/maps/search/?api=1&query=${location}`;
+                    // ✅ 构造 Google Calendar 链接
+                    calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${format(startDateTime, "yyyyMMdd'T'HHmmss")}/${format(endDateTime, "yyyyMMdd'T'HHmmss")}&location=${encodeURIComponent(location)}`;
+                  }
+                }
 
                 return (
-                  <li key={i} style={{ marginBottom: "0.75em" }}>
-                    <strong>{meeting.title}</strong><br />
-                    📅{" "}
-                    <a href={calendarLink} target="_blank" rel="noopener noreferrer">
-                      {meeting.date} {meeting.time ? `at ${meeting.time}` : ""}
-                    </a>
-                    <br />
-                    📍{" "}
-                    <a href={mapsLink} target="_blank" rel="noopener noreferrer">
-                      {meeting.location}
-                    </a>
+                  <li key={i} className="meeting-item" style={{ marginBottom: "1em" }}>
+                    <div className="meeting-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <strong>{title}</strong>
+                      <div style={{ display: "flex", gap: "0.5em" }}>
+                        <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="btn btn-map">
+                          📍 Show on Map
+                        </a>
+                        <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="btn btn-calendar">
+                          📅 Add to Calendar
+                        </a>
+                      </div>
+                    </div>
+                    <p style={{ margin: "0.3em 0 0 0.5em" }}>
+                      <span>📆 {meeting.date}</span><br />
+                      <span>🕒 {meeting.time || "Time not specified"}</span><br />
+                      <span>📌 {location}</span>
+                    </p>
                   </li>
                 );
               })}
