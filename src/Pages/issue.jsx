@@ -244,11 +244,11 @@ export default function IssuePage() {
         )}
 
 
-        {detailData?.meetings && (
+        {detailData?.recordings && (
           <div className="section-box">
             <h2>📽️ Recordings</h2>
             <div className="recording-list">
-              {detailData.meetings.map((rec, i) => {
+              {detailData.recordings.map((rec, i) => {
                 let videoId = "";
                 try {
                   const urlObj = new URL(rec.link);
@@ -278,7 +278,7 @@ export default function IssuePage() {
 
         {detailData &&
           Object.entries(detailData).map(([key, value]) => {
-            if (["description", "members", "meetings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
+            if (["description", "members", "recordings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
 
 
             if (Array.isArray(value)) {
