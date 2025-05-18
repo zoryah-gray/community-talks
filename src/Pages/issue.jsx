@@ -247,17 +247,24 @@ export default function IssuePage() {
 
 
       <div className="issue-right">
-        <div className="section-box">
-          <h2>📅 Upcoming Meetings</h2>
-          {/* <UpcomingMeetings meetings={meetings} /> */}
+        {(detailData?.meetingSchedule || detailData?.meetingPlace) && (
+          <div className="section-box">
+            <h2>📅 Upcoming Meetings</h2>
+            <div className="meeting-info-card">
+              {detailData.meetingSchedule && (
+                <p>
+                  <strong>🗓️ Schedule:</strong> {detailData.meetingSchedule}
+                </p>
+              )}
+              {detailData.meetingPlace && (
+                <p>
+                  <strong>📍 Location:</strong> {detailData.meetingPlace}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
-          {detailData?.meetingSchedule && (
-            <p><strong>Schedule:</strong> {detailData.meetingSchedule}</p>
-          )}
-          {detailData?.meetingPlace && (
-            <p><strong>Location:</strong> {detailData.meetingPlace}</p>
-          )}
-        </div>
 
         {detailData?.virtualMeeting && (
           <div className="section-box">
@@ -457,6 +464,16 @@ export default function IssuePage() {
             </ul>
           </div>
         )}
+
+        {detailData &&
+          !detailData.meetingSchedule &&
+          !detailData.meetingPlace &&
+          !detailData.virtualMeeting &&
+          (!detailData.meetings || detailData.meetings.length === 0) && (
+            <div style={{ color: "#909", fontStyle: "italic", padding: "9em" }}>
+              No meeting-related information available.
+            </div>
+          )}
 
       </div>
 

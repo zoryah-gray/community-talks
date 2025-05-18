@@ -5,12 +5,13 @@ const FeedbackForm = ({ department, onClose }) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false); // ✅ 错误提示状态
+  const [showError, setShowError] = useState(false); 
+  // for error message
 
   const handleSubmit = async () => {
     if (!text.trim()) {
       setShowError(true);
-      setTimeout(() => setShowError(false), 1500); // 自动关闭错误提示
+      setTimeout(() => setShowError(false), 1500); // show error for 1.5 seconds
       return;
     }
 
@@ -48,7 +49,7 @@ const FeedbackForm = ({ department, onClose }) => {
               </button>
               <button onClick={onClose}>Cancel</button>
             </div>
-            {/* ❗错误提示弹出框 */}
+            {/* warning */}
             {showError && (
               <div style={styles.errorBox}>⚠️ Feedback cannot be empty.</div>
             )}
