@@ -183,7 +183,7 @@ export default function IssuePage() {
 
         {detailData &&
           Object.entries(detailData).map(([key, value]) => {
-            if (["description","virtualMeeting", 'lastUpdated', "staff", "name", "members", 'meetings', "recordings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
+            if (["description", "virtualMeeting", 'lastUpdated', "staff", "name", "members", 'meetings', "recordings", "meetingPlace", "meetingSchedule"].includes(key)) return null;
 
 
             if (Array.isArray(value)) {
@@ -258,23 +258,24 @@ export default function IssuePage() {
             <p><strong>Location:</strong> {detailData.meetingPlace}</p>
           )}
         </div>
+
         {detailData?.virtualMeeting && (
           <div className="section-box">
             <h2>🖥️ Virtual Meeting Access</h2>
 
             {/* Public Comment Section */}
             {detailData.virtualMeeting.publicComment && (
-              <div className="virtual-subsection">
+              <div className="virtual-section">
                 <h3>📝 Public Comment</h3>
-                <ul>
+                <div className="virtual-card">
                   {Array.isArray(detailData.virtualMeeting.publicComment.methods) && (
-                    <li>
+                    <p>
                       <strong>How to Comment:</strong>{" "}
                       {detailData.virtualMeeting.publicComment.methods.join(", ")}
-                    </li>
+                    </p>
                   )}
                   {detailData.virtualMeeting.publicComment.signUpForm && (
-                    <li>
+                    <p>
                       <strong>Sign-Up Form:</strong>{" "}
                       <a
                         href={detailData.virtualMeeting.publicComment.signUpForm}
@@ -283,45 +284,45 @@ export default function IssuePage() {
                       >
                         Submit via Form
                       </a>
-                    </li>
+                    </p>
                   )}
                   {detailData.virtualMeeting.publicComment.contact && (
-                    <li>
+                    <p>
                       <strong>Contact:</strong>{" "}
                       <a href={`tel:${detailData.virtualMeeting.publicComment.contact}`}>
                         {detailData.virtualMeeting.publicComment.contact}
                       </a>
-                    </li>
+                    </p>
                   )}
-                </ul>
+                </div>
               </div>
             )}
 
             {/* Watch Options Section */}
             {Array.isArray(detailData.virtualMeeting.watchOptions) &&
               detailData.virtualMeeting.watchOptions.length > 0 && (
-                <div className="virtual-subsection">
+                <div className="virtual-section">
                   <h3>📺 How to Watch</h3>
-                  <ul>
+                  <div className="watch-grid">
                     {detailData.virtualMeeting.watchOptions.map((opt, idx) => (
-                      <li key={idx} style={{ marginBottom: "0.8em" }}>
-                        <div>
+                      <div key={idx} className="virtual-card">
+                        <p>
                           <strong>{opt.platform}</strong>{" "}
                           {opt.type && <span>({opt.type})</span>}
-                        </div>
+                        </p>
                         {opt.channel && (
-                          <div>
+                          <p>
                             <strong>Channel:</strong> {opt.channel}
-                          </div>
+                          </p>
                         )}
                         {opt.instructions && (
-                          <div>
+                          <p>
                             <strong>Instructions:</strong>{" "}
                             <em>{opt.instructions}</em>
-                          </div>
+                          </p>
                         )}
                         {opt.url && (
-                          <div>
+                          <p>
                             <strong>Watch Online:</strong>{" "}
                             <a
                               href={opt.url}
@@ -330,15 +331,18 @@ export default function IssuePage() {
                             >
                               {opt.url}
                             </a>
-                          </div>
+                          </p>
                         )}
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
           </div>
         )}
+
+
+
 
         {/* {detailData?.virtualMeeting && (
   <div className="section-box">
