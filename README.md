@@ -1,4 +1,4 @@
-# evan-community-forum
+# using https://github.com/394-s25/community-talks
 
 dependecies you will need to install
 
